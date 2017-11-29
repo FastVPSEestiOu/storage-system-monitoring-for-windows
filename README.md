@@ -6,11 +6,11 @@ storage-system-monitoring-for-windows
 В данном репозитории размещен открытый код используемой нами системы диагностики дисковой подсистемы Ваших серверов. 
 
 Как установить скрипт мониторинга?
-- Скачиваем установщик https://github.com/elky92/storage-system-monitoring-for-windows/raw/master/installer/fastvps_monitoring_install.exe
+- Скачиваем установщик https://github.com/FastVPSEestiOu/storage-system-monitoring-for-windows/raw/master/installer/fastvps_monitoring_install.exe
 - Запускаем его и следуем инструкциям по установке.
 - Скачивание и запуск установщика можно выполнить следующей PowerShell командой:
 ```bash
-wget https://github.com/elky92/storage-system-monitoring-for-windows/raw/master/installer/fas
+wget https://github.com/FastVPSEestiOu/storage-system-monitoring-for-windows/raw/master/installer/fas
 tvps_monitoring_install.exe -OutFile C:\Users\Administrator\Downloads\fastvps_monitoring_install.exe; & C:\Users\Adminis
 trator\Downloads\fastvps_monitoring_install.exe
 ```
@@ -83,7 +83,7 @@ C:\FASTVPS\StorageMonitoring\FastvpsMonitoring.ps1 -Test
 ```
 
 Как самому скомпилировать установщик?
- - Скачиваем архив с файлами, которые будут включены в установщик - https://github.com/elky92/storage-system-monitoring-for-windows/archive/master.zip
+ - Скачиваем архив с файлами, которые будут включены в установщик - https://github.com/FastVPSEestiOu/storage-system-monitoring-for-windows/archive/master.zip
  - Скачиваем утилиту для компиляции установщика в exe формате - http://nsis.sourceforge.net/Download
  - Запускаем утилиту NSIS и в качестве конфигурационного файла указываем - storage-monitoring-installer.NSI
  - Дожидаемся окончания компиляции и проверяем работу установщика.
