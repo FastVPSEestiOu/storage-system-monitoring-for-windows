@@ -336,7 +336,7 @@ Function Get-HardwareRaidVirtDeviceData
 }
 
 #Find the drive that has properties "BusType" with the value "RAID" and "Manufacturer" with the value "adaptec|dell|perc.". This is a hardware raid.
-[string]$HwraidModel =  Get-PhysicalDisk | where {$_.BusType -eq 'RAID'} | select -ExpandProperty "Manufacturer"
+[string]$HwraidModel =  Get-PhysicalDisk | where {$_.BusType -eq 'RAID'} | select -ExpandProperty "Manufacturer" -Unique
 
 #If a hardware raid is detected, we are trying to select the utility "megacli.exe" or "arcconf.exe" based on the property's "Manufacturer" value.
 if ( $HwraidModel ) {
