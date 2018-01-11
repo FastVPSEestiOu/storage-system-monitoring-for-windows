@@ -81,13 +81,14 @@ Function Get-PhysicalDiskSmartctlData
             if ( $SmartEnable )  {
                 [string[]]$SmartctlData = & $Smartctl -a $DriveName
                 [string]$DriveSize = $SmartctlData | Select-String "User Capacity:\s+(.*)$" -AllMatch | % {$_.Matches} | % {$_.groups[1].value}
+                [string]$DriveStatus = $SmartctlData | Select-String "SMART overall-health self-assessment test result:\s+(.*)$" -AllMatch | % {$_.Matches} | % {$_.groups[1].value}
                 [string]$DriveModel = $SmartctlData | Select-String "(Device Model:|Product:)\s+(.*)$" -AllMatch | % {$_.Matches} | % {$_.groups[2].value}
                 [string]$SmartctlData = $SmartctlData | Out-String
                  
                 [hashtable]$DrivesHash = @{
                     'size' = $DriveSize;
                     'device_name' = $DriveName;
-                    'status' = "undefined";
+                    'status' = $DriveStatus;
                     'type' = "hard_disk";
                     'diag' = $SmartctlData;
                     'model' = $DriveModel;
@@ -114,11 +115,7 @@ Function Get-SoftwareRaidData
     )
     Try
     {
-        #Detect the software raid and determine the required properties, using the powershell cmdlet "Get-VirtualDisk".
-        #Stop. It's true?! Do not need to use third-party utilities?
-        #?an we get at least some information using only the standard powershell commands?!?!??!
-        #OMG, it's unbelievable!!! YOHOOOOOOOOO!!!!!.
-        [array]$SoftwareRaidData = Get-VirtualDisk
+        [array]$SoftwareRaidData = Get-StoragePool;
         if ($SoftwareRaidData) {
             foreach ($SoftRaid in $SoftwareRaidData) {
             
@@ -126,7 +123,7 @@ Function Get-SoftwareRaidData
                 [string]$SoftwareRaidName = $SoftRaid.FriendlyName
                 [string]$SoftwareRaidStatus = $SoftRaid.HealthStatus
                 [string]$SoftwareRaidData = $SoftRaid | Format-List * | out-string
-                [string]$SoftwareRaidModel = $SoftRaid.Model
+                [string]$SoftwareRaidModel = $SoftRaid.ResiliencySettingNameDefault
         
                 [hashtable]$SoftwareRaidDrivesHash = @{
                     'size' = $SoftwareRaidSize;
@@ -428,4 +425,3 @@ write-host "Test mode on."
 else {
     [string[]]$SendRequestResult = Invoke-SendRequest -RequestData $AllDeviceData
 }
-
