@@ -50,8 +50,8 @@ Function Invoke-SendRequest
 
         #Convert the report to json and sent it to API.
         $RequestDataJson = $RequestDataHash | ConvertTo-Json -Depth 3
-        [string[]]$RequestResult = Invoke-WebRequest -Uri $API -Method Post -Body $RequestDataJson -ContentType "application/json"
-        
+	
+	[string[]]$RequestResult = Invoke-WebRequest -Uri $API -Method Post -Body ([System.Text.Encoding]::UTF8.GetBytes($RequestDataJson)) -ContentType "application/json; UTF-8"        
         return $RequestResult
     }
     Catch
