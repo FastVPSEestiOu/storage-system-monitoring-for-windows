@@ -43,11 +43,12 @@ section "install"
 	# Files and directories that will be included in the installer and unpacked when it is launched.
 	file /r "utilities"
 	file "FastvpsMonitoring.ps1"
-	
+
 	# Add task to schedule.
-        ExecWait 'schtasks /CREATE /SC HOURLY /TN "FastVPS Monitoring" /TR "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe $INSTDIR\FastvpsMonitoring.ps1" /RU "NT Authority\System"'
-        ExecWait 'schtasks /RUN /TN "FastVPS Monitoring"'
-	# Uninstaller file path.
+    ExecWait 'schtasks /CREATE /SC HOURLY /TN "FastVPS Monitoring" /TR "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -ExecutionPolicy RemoteSigned -File $INSTDIR\FastvpsMonitoring.ps1" /RU "NT Authority\System"'
+    ExecWait 'schtasks /RUN /TN "FastVPS Monitoring"'
+	
+    # Uninstaller file path.
 	writeUninstaller "$INSTDIR\uninstall.exe"
  
 	# Start Menu
@@ -62,7 +63,8 @@ section "install"
 	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${COMPANYNAME} ${APPNAME}" "DisplayVersion" "$\"${VERSIONMAJOR}.${VERSIONMINOR}.${VERSIONBUILD}$\""
 	WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${COMPANYNAME} ${APPNAME}" "VersionMajor" ${VERSIONMAJOR}
 	WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${COMPANYNAME} ${APPNAME}" "VersionMinor" ${VERSIONMINOR}
-	# There is no option for modifying or repairing the install
+	
+    # There is no option for modifying or repairing the install
 	WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${COMPANYNAME} ${APPNAME}" "NoModify" 1
 	WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${COMPANYNAME} ${APPNAME}" "NoRepair" 1
 sectionEnd
