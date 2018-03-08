@@ -19,6 +19,12 @@ tvps_monitoring_install.exe -OutFile C:\Users\Administrator\Downloads\fastvps_mo
 trator\Downloads\fastvps_monitoring_install.exe
 ```
 
+Where can I see a manual on the use of a script?
+ - You can get up-to-date documentation for your version of the script using the standard powershell utility - Get-Help. An example command to run in powershell:
+ ```powershell
+Get-Help C:\FASTVPS\StorageMonitoring\FastvpsMonitoring.ps1 -Full
+```
+
 - The script works via an ecrypted channel (https, ssl)
 - The script doesn't open any ports in the system (which excludes a chance of intrusion from outside)
 - The script doesn't update itself automatically (which excludes adding vulnerabilities)
@@ -96,9 +102,14 @@ Is XXX YYY support available?
 
 Is it possible to see the data collected by the script?
 
-- In order to do that you need to run the script with -Test key. All the data collected will appear on the screen.
+- In order to do that you need to run the script with -Verbose key. All the data collected will appear on the screen.
 ```bash
-C:\FASTVPS\StorageMonitoring\FastvpsMonitoring.ps1 -Test
+C:\FASTVPS\StorageMonitoring\FastvpsMonitoring.ps1 -Verbose
+```
+
+ - If you just want to view all the information received, but do not send it to the monitoring server, you must also use the -Test key:
+ ```powershell
+C:\FASTVPS\StorageMonitoring\FastvpsMonitoring.ps1 -Verbose -Test
 ```
 
 Can I compile the script by myself?
