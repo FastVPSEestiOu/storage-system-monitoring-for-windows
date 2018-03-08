@@ -9,15 +9,16 @@ The report is sent to monitor FASTVPS.
 If you want to remove this script, run uninstall.exe.
 .PARAMETER Test
 Produce report about founded deviced and print to console.
+.PARAMETER Verbose
+Used to display diagnostic messages. Can be used in conjunction with parametr Test.
 .EXAMPLE
 FastvpsMonitoring.ps1
-Standart mode. Silently generated report and sent it to API.
+Standart mode. Silently generate report and send it to API.
 .EXAMPLE
 FastvpsMonitoring.ps1 -Test
-Debug mode. Print generated report to console.
-Report is not sent to API.
+Test mode. Similar to the Standart mode, but report will not send to API.
 .NOTES
-  Version:        1.0
+Version:        1.0
 #>
 
 ######################################
@@ -48,17 +49,43 @@ Function Invoke-SendRequest
             'version' = "1.0";
         }   
 
+       
         #Convert the report to json and sent it to API.
         $RequestDataJson = $RequestDataHash | ConvertTo-Json -Depth 3
-	
-	[string[]]$RequestResult = Invoke-WebRequest -Uri $API -Method Post -Body ([System.Text.Encoding]::UTF8.GetBytes($RequestDataJson)) -ContentType "application/json; UTF-8"        
+        [System.Text.Encoding]::UTF8.GetBytes($RequestDataJson)
+
+        Write-Verbose -Message "REQUEST INFO`n"
+        Write-Verbose -Message "`t`tURI: $API"
+        Write-Verbose -Message "`t`tMethod: Post"
+        Write-Verbose -Message "`t`tContentType: application/json; UTF-8"
+        Write-Verbose -Message "`t`tBody: $RequestDataJson `n`n"
+
+        [string[]]$RequestResult = Invoke-WebRequest -Uri $API -Method Post -Body $RequestDataJson -ContentType "application/json; UTF-8"
+
         return $RequestResult
     }
-    Catch
-    {
-        Write-Warning "Invoke-SendRequest failed to execute"
-        Throw $_.Exception
-    }
+    Catch [System.Net.WebException] 
+    {                 
+        $Response = $_.Exception.Response
+
+        if ($Response)
+        {
+            $RequestStream = $Response.GetResponseStream()
+            $StreamReader = New-Object System.IO.StreamReader $RequestStream
+            $ResponseBody = $StreamReader.ReadToEnd()
+    
+            Write-Verbose -Message "RESPONSE INFO`n"            
+            Write-Verbose -Message "`t`tHeaders:" 
+            Echo "         `t`tStatus: $([int]$Response.StatusCode) - $($Response.StatusCode)"
+            foreach ($HeaderKey in $Response.Headers) {
+                    $Caption = $HeaderKey.PadLeft(15," ")
+                    Write-Verbose -Message "`t`t$Caption`: $($Response.Headers[$HeaderKey])";
+            }
+            Write-Verbose -Message "`t`tBody: $ResponseBody`n`n"
+        }
+        
+        Throw $_.Exception       
+    }                  
 }
  
 Function Get-PhysicalDiskSmartctlData 
@@ -78,7 +105,8 @@ Function Get-PhysicalDiskSmartctlData
             [string]$DriveName = $Drive.Split("{ }")[0]
             #Check the possibility of getting S.M.A.R.T. for the drive. If not available - next disk.
             [string]$SmartEnable = & $Smartctl -i $DriveName | select-string "SMART.+Enabled$"
-            if ( $SmartEnable )  {
+            if ( $SmartEnable )
+            {
                 [string[]]$SmartctlData = & $Smartctl -a $DriveName
                 [string]$DriveSize = $SmartctlData | Select-String "User Capacity:\s+(.*)$" -AllMatch | % {$_.Matches} | % {$_.groups[1].value}
                 [string]$DriveStatus = $SmartctlData | Select-String "SMART overall-health self-assessment test result:\s+(.*)$" -AllMatch | % {$_.Matches} | % {$_.groups[1].value}
@@ -95,7 +123,8 @@ Function Get-PhysicalDiskSmartctlData
                   }
                 [array]$DrivesArray += $DrivesHash
             }
-            else {
+            else
+            {
                 Continue
             }
         }        
@@ -116,7 +145,8 @@ Function Get-SoftwareRaidData
     Try
     {
         [array]$SoftwareRaidData = Get-StoragePool;
-        if ($SoftwareRaidData) {
+        if ($SoftwareRaidData)
+        {
             foreach ($SoftRaid in $SoftwareRaidData) {
             
                 [string]$SoftwareRaidSize = [math]::Round(($SoftRaid.Size/1TB), 2).ToString() + "Tb" + "(" + ($SoftRaid.Size/1Gb).ToString() + "Gb)" 
@@ -156,7 +186,8 @@ Function Get-HardwareRaidDisksData
     )
     Try
     {        
-        if ($RaidModel -match "adaptec") {
+        if ($RaidModel -match "adaptec")
+        {
             foreach ($VirtualDevice In $HwraidVirtualDevices) {
                 #$VirtualDevice is a hash with the data of the found logical device.
                 #Get information of the used logical devices from '$VirtualDevice.diag'.
@@ -173,10 +204,12 @@ Function Get-HardwareRaidDisksData
                 $SmartSasXml = ([xml]([Regex]::Match($SmartData, '(?s)<SASSmartStats.*?</SASSmartStats>')).Value)
                 
                 #Select the XML nodes "SATA" or "SAS".
-                if ($SmartSataXml) {
+                if ($SmartSataXml)
+                {
                     [xml]$XML = $SmartSataXml
                 }
-                elseif ($SmartSasXml) {
+                elseif ($SmartSasXml)
+                {
                     [xml]$XML = $SmartSasXml
                 }
         
@@ -214,8 +247,8 @@ Function Get-HardwareRaidDisksData
                 }
             }
         }
-        elseif ($RaidModel -match "dell|perc"){
-    
+        elseif ($RaidModel -match "dell|perc")
+        { 
                 [int]$PhysicalDriveDeviceId = & $CLI -EncInfo -aALL | Select-String "^\s+Device\sID\s+:\s(\d+)" -AllMatches | % {$_.Matches} | % {$_.groups[1].value}
                 [int[]]$PhysicalDriveSlot = & $CLI -PDList -aALL | Select-String "\s*Slot\sNumber:\s(\d+)" -AllMatches | % {$_.Matches} | % {$_.groups[1].value}
                 
@@ -257,7 +290,8 @@ Function Get-HardwareRaidVirtDeviceData
     )
     Try
     {
-        if ($RaidModel -match 'adaptec') {
+        if ($RaidModel -match 'adaptec')
+        {
             
             #Get all logical devices.
             [string[]]$LogicalDrives = & $CLI GETCONFIG 1 LD
@@ -288,7 +322,8 @@ Function Get-HardwareRaidVirtDeviceData
         elseif ($RaidModel -match "dell|perc") {
 
             [string[]]$LogicalDrivesId = & $CLI -LDInfo -Lall -Aall | Select-String "Virtual Drive:\s+(\d+)" -AllMatches | % {$_.Matches} | % {$_.groups[1].value} 
-            foreach ($LogicalDriveId in $LogicalDrivesId){
+            
+            foreach ($LogicalDriveId in $LogicalDrivesId) {
                 [string[]]$LogicalDriveData = & $CLI -LDInfo -L"$LogicalDriveId" -aALL
                 
                 [string]$LogicalDriveSize = $LogicalDriveData | Select-String "^Size\s*: (.*)$" -AllMatches | % {$_.Matches} | % {$_.groups[1].value} 
@@ -336,92 +371,95 @@ Function Get-HardwareRaidVirtDeviceData
 [string]$HwraidModel =  Get-PhysicalDisk | where {$_.BusType -eq 'RAID'} | select -ExpandProperty "Manufacturer" -Unique
 
 #If a hardware raid is detected, we are trying to select the utility "megacli.exe" or "arcconf.exe" based on the property's "Manufacturer" value.
-if ( $HwraidModel ) {
+if ( $HwraidModel )
+{
     $HwraidModel = $HwraidModel.trim()
+    write-verbose -Message "Hardware raid detected. Manufacturer: $HwraidModel`n"
+    write-verbose -Message "HWRAID Virtual devices found: $HwraidVirtualDevices.Count`n"
+    
     #Get cli utility path for founded hardware raid.
     [string]$CLIPath = $UtilityByModel.$HwraidModel
-    if ((Get-Command $CLIPath -ErrorAction SilentlyContinue) -eq $null) { 
+    if ((Get-Command $CLIPath -ErrorAction SilentlyContinue) -eq $null)
+    { 
         write-error "Unable to find hardware raid utility"
         exit
     }
-
+    
     #Get virtual or logical devices, created for hardware raid.
     [array]$HwraidVirtualDevices = Get-HardwareRaidVirtDeviceData -RaidModel $HwraidModel -CLI "$CLIPath"
+    if ($HwraidVirtualDevices.Count -ne '0') {
+        write-host "HWRAID VIRTUAL DEVICES INFO`n"
+        foreach ($device in $HwraidVirtualDevices) {
+            write-verbose -Message "`t`tName: $($device.device_name | Out-String)"
+            write-verbose -Message "`t`tStatus: $($device.status | Out-String)"
+            write-verbose -Message "`t`tSize: $($device.size | Out-String)"
+        	write-verbose -Message "`t`tType: $($device.type | Out-String)`n"
+        }
+    }
     
     #Get the physical disks connected to the hardware raid.
     [array]$HwraidDisks = Get-HardwareRaidDisksData -RaidModel $HwraidModel -CLI "$CLIPath" -HwraidVirtualDevices $HwraidVirtualDevices -Smartctl "$SmartctlPath"
-    
-}
-
-    #Get software raid.
-    [array]$SoftwareRaidData = Get-SoftwareRaidData
-    
-    #Get physical drives.
-    [array]$PhysicalDisks = Get-PhysicalDiskSmartctlData -Smartctl "$SmartctlPath"
-    if ((Get-Command $SmartctlPath -ErrorAction SilentlyContinue) -eq $null) { 
-        write-error "Unable to find smartctl.exe"
-        exit
-    }
-    
-    #Merge all elements from previously defined arrays into one array. Arrays with a number of elements equal to 0 are ignored.
-    foreach ($Array in ($HwraidVirtualDevices, $HwraidDisks, $SoftwareRaidData, $PhysicalDisks)) {
-        if ( $array.count -ne '0' ) {
-            [array]$AllDeviceData += $Array
+    if ($HwraidDisks.Count -ne '0')
+    {
+        write-host "HWRAID DRIVES INFO`n"
+        foreach ($device in $HwraidDisks) {
+            write-verbose -Message "`t`tName: $($device.device_name | Out-String)"
+            write-verbose -Message "`t`tType: $($device.type | Out-String)"
+            write-verbose -Message "`t`tSize: $($device.size | Out-String)"
+            write-verbose -Message "`t`tModel: $($device.model | Out-String)`n"
         }
     }
+}
+
+#Get software raid.
+[array]$SoftwareRaidData = Get-SoftwareRaidData
+if ($SoftwareRaidData.Count -ne '0')
+{
+    write-verbose -Message "SOFTWARE RAID INFO`n"
+    foreach ($device in $SoftwareRaidData) {
+        write-verbose -Message "`t`tName: $($device.device_name | Out-String)"
+        write-verbose -Message "`t`tStatus: $($device.status | Out-String)"
+        write-verbose -Message "`t`tSize: $($device.size | Out-String)"
+    	write-verbose -Message "`t`tType: $($device.type | Out-String)`n"
+    }
+}
+
+#Get physical drives.
+[array]$PhysicalDisks = Get-PhysicalDiskSmartctlData -Smartctl "$SmartctlPath"
+if ((Get-Command $SmartctlPath -ErrorAction SilentlyContinue) -eq $null)
+{ 
+    write-error "Unable to find smartctl.exe"
+    exit
+}
+
+if ($PhysicalDisks.Count -ne '0')
+{
+    write-verbose -Message "PHYSICAL DRIVES INFO`n"
+    foreach ($device in $PhysicalDisks) {
+        write-verbose -Message "`t`tName: $($device.device_name | Out-String)"
+    	write-verbose -Message "`t`tType: $($device.type | Out-String)"
+        write-verbose -Message "`t`tSize: $($device.size | Out-String)"
+        write-verbose -Message "`t`tModel: $($device.model | Out-String)`n"
+    }
+}
+
+#Merge all elements from previously defined arrays into one array. Arrays with a number of elements equal to 0 are ignored.
+foreach ($Array in ($HwraidVirtualDevices, $HwraidDisks, $SoftwareRaidData, $PhysicalDisks)) {
+    if ( $array.count -ne '0' )
+    {
+        [array]$AllDeviceData += $Array
+    }
+}
 
 #If the "Test" property is not set, the data is sent to the monitoring API.
-if ( $Test ) {
-write-host "Test mode on."
-    if ( $HwraidModel ) {
-        write-host "Hardware raid detected. Manufacturer:"$HwraidModel
-        write-host "HWRAID Virtual devices found:"$HwraidVirtualDevices.Count
-        if ($HwraidVirtualDevices.Count -ne '0') {
-            write-host "HWRAID Virtual devices info:"
-            foreach ($device in $HwraidVirtualDevices) {
-            	write-host "Name:" $device.device_name
-                write-host "Status:" $device.status
-                write-host "Size:" $device.size
-            	write-host "Type:" $device.type
-            	write-host "Diagnostic data:`n" $device.diag
-            }
-        }
-        write-host "HWRAID Physical drives found:"$HwraidDisks.Count
-        if ($HwraidDisks.Count -ne '0') {
-            write-host "HWRAID Physical drives info:"
-            foreach ($device in $HwraidDisks) {
-                write-host "Name:" $device.device_name
-            	write-host "Type:" $device.type
-                write-host "Size:" $device.size
-                write-host "Model:" $device.model
-                write-host "Diagnostic data:`n" $device.diag
-            }
-        }
-    }
-    write-host "Software raid found:"$SoftwareRaidData.Count
-    if ($SoftwareRaidData.Count -ne '0') {
-        write-host "Software raid info:"
-        foreach ($device in $SoftwareRaidData) {
-        	write-host "Name:" $device.device_name
-            write-host "Status:" $device.status
-            write-host "Size:" $device.size
-        	write-host "Type:" $device.type
-        	write-host "Diagnostic data:`n" $device.diag
-        }
-    }
-    write-host "Physical drives found:"$PhysicalDisks.Count
-    if ($PhysicalDisks.Count -ne '0') {
-        write-host "Physical drives info:"
-        foreach ($device in $PhysicalDisks) {
-            write-host "Name:" $device.device_name
-        	write-host "Type:" $device.type
-            write-host "Size:" $device.size
-            write-host "Model:" $device.model
-            write-host "Diagnostic data:`n" $device.diag
-        }
-    }
-}
-#If the Test property is set, we create a report and display it on the console. The report is not sent to api.
-else {
+if ( -not $Test )
+{
+    Write-Verbose -Message "Mode 'Test' did not activate. Send request to API`n`n"
     [string[]]$SendRequestResult = Invoke-SendRequest -RequestData $AllDeviceData
 }
+else
+{
+    Write-Verbose -Message "Mode 'Test' activated. Request will not send to API`n`n"
+}
+
+Write-Verbose -Message "Finish"
