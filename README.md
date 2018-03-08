@@ -11,10 +11,16 @@ storage-system-monitoring-for-windows
 - Скачиваем установщик https://github.com/FastVPSEestiOu/storage-system-monitoring-for-windows/raw/master/installer/fastvps_monitoring_install.exe
 - Запускаем его и следуем инструкциям по установке.
 - Скачивание и запуск установщика можно выполнить следующей PowerShell командой:
-```bash
+```powershell
 wget https://github.com/FastVPSEestiOu/storage-system-monitoring-for-windows/raw/master/installer/fas
 tvps_monitoring_install.exe -OutFile C:\Users\Administrator\Downloads\fastvps_monitoring_install.exe; & C:\Users\Adminis
 trator\Downloads\fastvps_monitoring_install.exe
+```
+
+Где посмотреть мануал по использованию скрипта?
+ -  Актуальную документацию для Вашей версии скрипта Вы можете получить при помощи стандартной утилиты powershell - Get-Help. Пример команды для запуска в powershell:
+ ```powershell
+Get-Help C:\FASTVPS\StorageMonitoring\FastvpsMonitoring.ps1 -Full
 ```
 
 Насколько безопасен скрипт?
@@ -79,9 +85,14 @@ trator\Downloads\fastvps_monitoring_install.exe
 - Разумеется, патчи приветствуются!                                                                    
 
 Как посмотреть данные, которые собраны в процессе работы скрипта?
- - Для этого Вам необходимо запустить скрипт с ключом -Test. Все собранные данные будут выведены на экран.
-```bash
-C:\FASTVPS\StorageMonitoring\FastvpsMonitoring.ps1 -Test
+ - Для этого Вам необходимо запустить скрипт с ключом -Verbose. Все собранные данные будут выведены на экран.
+```powershell
+C:\FASTVPS\StorageMonitoring\FastvpsMonitoring.ps1 -Verbose
+```
+
+ - Если Вы хотите просто посмотреть всю полученную информацию, но не отправлять ее на сервер мониторинга, то необходимо в дополнение использовать ключ -Test:
+ ```powershell
+C:\FASTVPS\StorageMonitoring\FastvpsMonitoring.ps1 -Verbose -Test
 ```
 
 Как самому скомпилировать установщик?
