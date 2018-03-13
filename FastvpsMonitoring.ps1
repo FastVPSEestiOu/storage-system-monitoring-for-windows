@@ -49,7 +49,6 @@ Function Invoke-SendRequest
             'version' = "1.0";
         }   
 
-       
         #Convert the report to json and sent it to API.
         $RequestDataJson = $RequestDataHash | ConvertTo-Json -Depth 3
         [System.Text.Encoding]::UTF8.GetBytes($RequestDataJson)
@@ -60,7 +59,7 @@ Function Invoke-SendRequest
         Write-Verbose -Message "`t`tContentType: application/json; UTF-8"
         Write-Verbose -Message "`t`tBody: $RequestDataJson `n`n"
 
-        [string[]]$RequestResult = Invoke-WebRequest -Uri $API -Method Post -Body $RequestDataJson -ContentType "application/json; UTF-8"
+        [string[]]$RequestResult = Invoke-WebRequest -Uri $API -Method Post -Body $RequestDataJson -ContentType "application/json"
 
         return $RequestResult
     }
@@ -388,7 +387,7 @@ if ( $HwraidModel )
     #Get virtual or logical devices, created for hardware raid.
     [array]$HwraidVirtualDevices = Get-HardwareRaidVirtDeviceData -RaidModel $HwraidModel -CLI "$CLIPath"
     if ($HwraidVirtualDevices.Count -ne '0') {
-        write-host "HWRAID VIRTUAL DEVICES INFO`n"
+        write-verbose "HWRAID VIRTUAL DEVICES INFO`n"
         foreach ($device in $HwraidVirtualDevices) {
             write-verbose -Message "`t`tName: $($device.device_name | Out-String)"
             write-verbose -Message "`t`tStatus: $($device.status | Out-String)"
@@ -401,7 +400,7 @@ if ( $HwraidModel )
     [array]$HwraidDisks = Get-HardwareRaidDisksData -RaidModel $HwraidModel -CLI "$CLIPath" -HwraidVirtualDevices $HwraidVirtualDevices -Smartctl "$SmartctlPath"
     if ($HwraidDisks.Count -ne '0')
     {
-        write-host "HWRAID DRIVES INFO`n"
+        write-verbose "HWRAID DRIVES INFO`n"
         foreach ($device in $HwraidDisks) {
             write-verbose -Message "`t`tName: $($device.device_name | Out-String)"
             write-verbose -Message "`t`tType: $($device.type | Out-String)"
