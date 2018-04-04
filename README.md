@@ -12,9 +12,7 @@ storage-system-monitoring-for-windows
 - Запускаем его и следуем инструкциям по установке.
 - Скачивание и запуск установщика можно выполнить следующей PowerShell командой:
 ```powershell
-wget https://github.com/FastVPSEestiOu/storage-system-monitoring-for-windows/raw/master/installer/fas
-tvps_monitoring_install.exe -OutFile C:\Users\Administrator\Downloads\fastvps_monitoring_install.exe; & C:\Users\Adminis
-trator\Downloads\fastvps_monitoring_install.exe
+wget https://github.com/FastVPSEestiOu/storage-system-monitoring-for-windows/raw/master/installer/fastvps_monitoring_install.exe -OutFile C:\Users\Administrator\Downloads\fastvps_monitoring_install.exe; & C:\Users\Administrator\Downloads\fastvps_monitoring_install.exe
 ```
 
 Где посмотреть мануал по использованию скрипта?
@@ -64,7 +62,7 @@ Get-Help C:\FASTVPS\StorageMonitoring\FastvpsMonitoring.ps1 -Full
 - Корректность работы скрипта на других версиях ОС Windows не проверялась и поэтому не гарантируется.
 
 На каком языке написано ПО для мониторинга?
-- PowerShell (скрипт мониторинга)
+- PowerShell 4.0 (скрипт мониторинга)
 - NSIS (установщик)
 
 Какие изменения в системе мы производим?

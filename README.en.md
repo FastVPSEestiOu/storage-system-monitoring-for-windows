@@ -14,9 +14,7 @@ How to install the monitoring script?
 
 You may also download and run the installer by executing only one PowerShell command line:
 ```bash
-wget https://github.com/FastVPSEestiOu/storage-system-monitoring-for-windows/raw/master/installer/fas
-tvps_monitoring_install.exe -OutFile C:\Users\Administrator\Downloads\fastvps_monitoring_install.exe; & C:\Users\Adminis
-trator\Downloads\fastvps_monitoring_install.exe
+wget https://github.com/FastVPSEestiOu/storage-system-monitoring-for-windows/raw/master/installer/fastvps_monitoring_install.exe -OutFile C:\Users\Administrator\Downloads\fastvps_monitoring_install.exe; & C:\Users\Administrator\Downloads\fastvps_monitoring_install.exe
 ```
 
 Where can I see a manual on the use of a script?
@@ -74,7 +72,7 @@ Which operating systems are supported:
 
 Which program language the script was written in?
 
-- PowerShell (monitoring script)
+- PowerShell 4.0 (monitoring script)
 - NSIS (installer)
 
 What changes will be made in the system?
