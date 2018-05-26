@@ -427,7 +427,7 @@ if ($HwraidModel)
             write-verbose -Message "`t`tSize: $($device.size | Out-String)"
             write-verbose -Message "`t`tType: $($device.type | Out-String)"
         }
-	write-verbose -Message "`n"
+        write-verbose -Message "`n"
     }
 
     #Get the physical disks connected to the hardware raid.
@@ -442,7 +442,7 @@ if ($HwraidModel)
             write-verbose -Message "`t`tSize: $($device.size | Out-String)"
             write-verbose -Message "`t`tModel: $($device.model | Out-String)"
         }
-	write-verbose -Message "`n"
+        write-verbose -Message "`n"
     }
 }
 
