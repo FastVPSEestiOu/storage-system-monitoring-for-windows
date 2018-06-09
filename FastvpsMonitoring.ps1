@@ -111,39 +111,51 @@ Function Get-PhysicalDiskSmartctlData
         [string[]]$SmartctlScanResult = & $Smartctl --scan-open
         [string[]]$SmartctlScanNvmeResult = & $Smartctl --scan-open -d nvme
 
-        $SmartctlScanResult += $SmartctlScanNvmeResult
- 
+        if ($SmartctlScanNvmeResult.Count) {
+            $SmartctlScanResult += $SmartctlScanNvmeResult
+        }
 
         Foreach ($Drive in $SmartctlScanResult) {
             #Get drive name format like "/dev/sda"
             [string]$DriveName = $Drive.Split("{ }")[0]
-            Write-Verbose "Disk ----------- $DriveName"
+            [string]$DriveType = $Drive.Split("{ }")[2]
 
-            #Check the possibility of getting S.M.A.R.T. for the drive. If not available - next disk.
-            #[string]$SmartEnable = & $Smartctl -i $DriveName | select-string "SMART.+Enabled$"
-            #If ($SmartEnable)
-            #{
-                [string[]]$SmartctlData = & $Smartctl -a $DriveName
-                [string]$DriveSize = $SmartctlData | Select-String "User Capacity:\s+(.*)$" -AllMatch | % {$_.Matches} | % {$_.groups[1].value}
-                [string]$DriveStatus = $SmartctlData | Select-String "SMART overall-health self-assessment test result:\s+(.*)$" -AllMatch | % {$_.Matches} | % {$_.groups[1].value}
-                [string]$DriveModel = $SmartctlData | Select-String "(Device Model:|Product:)\s+(.*)$" -AllMatch | % {$_.Matches} | % {$_.groups[2].value}
-                [string]$SmartctlData = $SmartctlData | Out-String
+        #  Write-Verbose -Message "Disk Name ----------- $DriveName"
+        #  Write-Verbose -Message "Disk Type ----------- $DriveType"
+  	       [string]$SmartEnable = & $Smartctl -i $DriveName | select-string "SMART.+Enabled$"
 
-                [hashtable]$DrivesHash = @{
-                    'size' = $DriveSize;
-                    'device_name' = $DriveName;
-                    'status' = $DriveStatus;
-                    'type' = "hard_disk";
-                    'diag' = $SmartctlData;
-                    'model' = $DriveModel;
-                  }
-                [array]$DrivesArray += $DrivesHash
-            #}
-            #else
-            #{
-            #    Continue
-            #}
+           If (-not $SmartEnable)
+           {
+               #Do not check for a smart enabled entry for NVME disks.
+               #They do not have this parameter by default.
+               If ($DriveType -ne 'nvme')
+		       {
+                   Write-Warning -Message "Disk $($DriveName) have type $($DriveType) and does not have SMART support. We do not check this disk"
+			       Continue
+		       }
+               else
+               {
+                   Write-Verbose -Message "Drive $($DriveName) a $($DriveType) drive. Ignore the check for smart enable"
+               }
+		    }
+
+            [string[]]$SmartctlData = & $Smartctl -a $DriveName
+            [string]$DriveSize = $SmartctlData | Select-String "User Capacity:\s+(.*)$" -AllMatch | % {$_.Matches} | % {$_.groups[1].value}
+            [string]$DriveStatus = $SmartctlData | Select-String "SMART overall-health self-assessment test result:\s+(.*)$" -AllMatch | % {$_.Matches} | % {$_.groups[1].value}
+            [string]$DriveModel = $SmartctlData | Select-String "(Device Model:|Product:)\s+(.*)$" -AllMatch | % {$_.Matches} | % {$_.groups[2].value}
+            [string]$SmartctlData = $SmartctlData | Out-String
+
+            [hashtable]$DrivesHash = @{
+                'size' = $DriveSize;
+                'device_name' = $DriveName;
+                'status' = $DriveStatus;
+                'type' = "hard_disk";
+                'diag' = $SmartctlData;
+                'model' = $DriveModel;
+            }
+            [array]$DrivesArray += $DrivesHash
         }
+
         return $DrivesArray
     }
     Catch
@@ -509,4 +521,3 @@ else
 }
 
 Write-Verbose -Message "Finish"
-
