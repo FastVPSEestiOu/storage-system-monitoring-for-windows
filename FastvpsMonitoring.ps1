@@ -109,15 +109,20 @@ Function Get-PhysicalDiskSmartctlData
         #Get the physical disks available for smartctl.
         #The found lines have the format like "dev/sda -d ata # /dev/sda"
         [string[]]$SmartctlScanResult = & $Smartctl --scan-open
+        [string[]]$SmartctlScanNvmeResult = & $Smartctl --scan-open -d nvme
+
+        $SmartctlScanResult += $SmartctlScanNvmeResult
+ 
 
         Foreach ($Drive in $SmartctlScanResult) {
             #Get drive name format like "/dev/sda"
             [string]$DriveName = $Drive.Split("{ }")[0]
+            Write-Verbose "Disk ----------- $DriveName"
 
             #Check the possibility of getting S.M.A.R.T. for the drive. If not available - next disk.
-            [string]$SmartEnable = & $Smartctl -i $DriveName | select-string "SMART.+Enabled$"
-            If ($SmartEnable)
-            {
+            #[string]$SmartEnable = & $Smartctl -i $DriveName | select-string "SMART.+Enabled$"
+            #If ($SmartEnable)
+            #{
                 [string[]]$SmartctlData = & $Smartctl -a $DriveName
                 [string]$DriveSize = $SmartctlData | Select-String "User Capacity:\s+(.*)$" -AllMatch | % {$_.Matches} | % {$_.groups[1].value}
                 [string]$DriveStatus = $SmartctlData | Select-String "SMART overall-health self-assessment test result:\s+(.*)$" -AllMatch | % {$_.Matches} | % {$_.groups[1].value}
@@ -133,11 +138,11 @@ Function Get-PhysicalDiskSmartctlData
                     'model' = $DriveModel;
                   }
                 [array]$DrivesArray += $DrivesHash
-            }
-            else
-            {
-                Continue
-            }
+            #}
+            #else
+            #{
+            #    Continue
+            #}
         }
         return $DrivesArray
     }
@@ -504,3 +509,4 @@ else
 }
 
 Write-Verbose -Message "Finish"
+
