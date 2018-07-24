@@ -127,7 +127,7 @@ Function Get-PhysicalDiskSmartctlData
         If ($DriveType -NotMatch 'nvme')
         {
             [string]$SmartEnable = & $Smartctl -i $DriveName | select-string "SMART.+Enabled$"
-             
+
             If (-not $SmartEnable)
                 {
                     Write-Warning -Message "The disk name is $($DriveName), the disk type is $($DriveType). This disk does not have SMART support. We do not check this disk"
@@ -263,8 +263,16 @@ Function Get-HardwareRaidDisksData
                     #Get the SMART attributes for the specified drive from xml.
                     [string[]]$PhysicalDriveArcconfData = ($XML.SelectNodes("/SmartStats/PhysicalDriveSmartStats") | where {$_.id -eq $PhysicalDriveDeviceId}).Attribute.OuterXml
 
-                    #Combine the data, received from arcconf and smartctl.
-                    [string]$PhysicalDriveData = ($PhysicalDriveSmartctlData + $PhysicalDriveArcconfData) | Out-String
+                    if ($PhysicalDriveSmartctlData -match 'ARCIOCTL_SEND_RAW_SRB failed')
+                    {
+                        Write-Warning -Message "Can't get SMART information about drive by smartctl. Adaptec bug. Skip it"
+                        [string]$PhysicalDriveData = $PhysicalDriveArcconfData | Out-String
+                    }
+                    else
+                    {
+                        #Combine the data, received from arcconf and smartctl.
+                        [string]$PhysicalDriveData = ($PhysicalDriveSmartctlData + $PhysicalDriveArcconfData) | Out-String
+                    }
 
                     [string]$PhysicalDriveSize = $PhysicalDriveSmartctlData | Select-String "User Capacity:\s+(.*)$" -AllMatch | % {$_.Matches} | % {$_.groups[1].value}
                     [string]$PhysicalDriveModel = $PhysicalDriveSmartctlData | Select-String "(Device Model:|Product:)\s+(.*)$" -AllMatch | % {$_.Matches} | % {$_.groups[2].value}
@@ -522,4 +530,3 @@ else
 }
 
 Write-Verbose -Message "Finish"
-
