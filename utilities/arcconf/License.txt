@@ -1,292 +1,105 @@
-International License Agreement for Non-Warranted Programs
-
-Part 1 - General Terms 
-
-PLEASE READ THIS AGREEMENT CAREFULLY BEFORE USING THE PROGRAM.
-Adaptec WILL LICENSE THE PROGRAM TO YOU ONLY IF YOU FIRST ACCEPT THE
-TERMS OF THIS AGREEMENT. BY USING THE PROGRAM YOU AGREE TO THESE
-TERMS. IF YOU DO NOT AGREE TO THE TERMS OF THIS AGREEMENT,
-PROMPTLY RETURN THE UNUSED PROGRAM TO THE PARTY (EITHER Adaptec OR
-ITS RESELLER) FROM WHOM YOU ACQUIRED IT TO RECEIVE A REFUND OF
-THE AMOUNT YOU PAID. 
-
-The Program is owned by (Adaptec) or a supplier of Adaptec 
-and is copyrighted and licensed, not sold. 
-
-The term "Program" means the original program and all whole or
-partial copies of it. A Program consists of machine-readable
-instructions, its components, data, audio-visual content (such
-as images, text, recordings, or pictures), and related licensed
-materials. 
-
-This Agreement includes Part 1 - General Terms and Part 2 
-Country unique Terms and is the complete agreement regarding the
-use of this Program, and replaces any prior oral or written
-communications between you and Adaptec. The terms of Part 2 may
-replace or modify those of Part 1. 
-
-
-1. License 
-
-Use of the Program 
-
-Adaptec grants you a nonexclusive license to use the Program. 
-
-You may 1) use the Program to the extent of authorizations you
-have acquired and 2) make and install copies to support the
-level of use authorized, providing you reproduce the copyright
-notice and any other legends of ownership on each copy, or
-partial copy, of the Program. 
-
-If you acquire this Program as a program upgrade, your
-authorization to use the Program from which you upgraded is
-terminated. 
-
-You will ensure that anyone who uses the Program does so only in
-compliance with the terms of this Agreement. 
-
-You may not 1) use, copy, modify, or distribute the Program
-except as provided in this Agreement; 2) reverse assemble,
-reverse compile, or otherwise translate the Program except as
-specifically permitted by law without the possibility of
-contractual waiver; or 3) sublicense, rent, or lease the
-Program. 
-
-Transfer of Rights and Obligations 
-
-You may transfer all your license rights and obligations under a
-Proof of Entitlement for the Program to another party by
-transferring the Proof of Entitlement and a copy of this
-Agreement and all documentation. The transfer of your license
-rights and obligations terminates your authorization to use the
-Program under the Proof of Entitlement. 
-
-
-2. Proof of Entitlement 
-
-The Proof of Entitlement for this Program is evidence of your
-authorization to use this Program and of your eligibility for
-future upgrade program prices (if announced) and potential
-special or promotional opportunities. 
-
-
-3. Charges and Taxes 
-
-Adaptec defines use for the Program for charging purposes and
-specifies it in the Proof of Entitlement. Charges are based on
-extent of use authorized. If you wish to increase the extent of
-use, notify Adaptec or its reseller and pay any applicable charges.
-Adaptec does not give refunds or credits for charges already due or
-paid. 
-
-If any authority imposes a duty, tax, levy or fee, excluding
-those based on Adaptec's net income, upon the Program supplied by
-Adaptec under this agreement, then you agree to pay that amount 
-as Adaptec specifies or
-supply exemption documentation. 
-
-
-4. No Warranty 
-
-SUBJECT TO ANY STATUTORY WARRANTIES WHICH CAN NOT BE EXCLUDED,
-Adaptec MAKES NO WARRANTIES OR CONDITIONS EITHER EXPRESS OR IMPLIED,
-INCLUDING WITHOUT LIMITATION, THE WARRANTY OF NON-INFRINGEMENT
-AND THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
-PARTICULAR PURPOSE, REGARDING THE PROGRAM OR TECHNICAL SUPPORT,
-IF ANY. Adaptec MAKES NO WARRANTY REGARDING THE CAPABILITY OF THE
-PROGRAM TO CORRECTLY PROCESS, PROVIDE AND/OR RECEIVE DATE DATA
-WITHIN AND BETWEEN THE 20TH AND 21ST CENTURIES. 
-
-The exclusion also applies to any of Adaptec's subcontractors,
-suppliers, or program developers (collectively called
-"Suppliers"). 
-
-Manufacturers, suppliers, or publishers of non-Adaptec Programs may
-provide their own warranties. 
-
-
-5. Limitation of Liability 
-
-NEITHER Adaptec NOR ITS SUPPLIERS WILL BE LIABLE FOR ANY DIRECT OR
-INDIRECT
-
-DAMAGES, INCLUDING WITHOUT LIMITATION, LOST PROFITS, LOST
-SAVINGS, OR ANY INCIDENTAL, SPECIAL, OR OTHER ECONOMIC
-CONSEQUENTIAL DAMAGES, EVEN IF Adaptec IS INFORMED OF THEIR
-POSSIBILITY. SOME JURISDICTIONS DO NOT ALLOW THE EXCLUSION OR
-LIMITATION OF INCIDENTAL OR CONSEQUENTIAL DAMAGES, SO THE ABOVE
-EXCLUSION OR LIMITATION MAY NOT APPLY TO YOU. 
-
-
-6. General 
-
-Nothing in this Agreement affects any statutory rights of
-consumers that cannot be waived or limited by contract. 
-
-Adaptec may terminate your license if you fail to comply with the
-terms of this Agreement. If Adaptec does so, you must immediately
-destroy the Program and all copies you made of it. 
-
-You agree to comply with applicable export laws and regulations. 
-
-Neither you nor Adaptec will bring a legal action under this
-Agreement more than two years after the cause of action arose
-unless otherwise provided by local law without the possibility
-of contractual waiver or limitation. 
-
-Neither you nor Adaptec is responsible for failure to fulfill any
-obligations due to causes beyond its control. 
-
-Adaptec does not provide program services or technical support,
-unless Adaptec specifies otherwise. 
-
-The laws of the country in which you acquire the Program govern
-this Agreement, except 1) in Australia, the laws of the State or
-Territory in which the transaction is performed govern this
-Agreement; 2) in Albania, Armenia, Belarus, Bosnia/Herzegovina,
-Bulgaria, Croatia, Czech Republic, Georgia, Hungary, Kazakhstan,
-Kirghizia, Former Yugoslav Republic of Macedonia
-(FYROM), Moldova, Poland, Romania, Russia, Slovak Republic,
-Slovenia, Ukraine, and Federal Republic of Yugoslavia, the laws
-of Austria govern this Agreement; 3) in the United Kingdom, all
-disputes relating to this Agreement will be governed by English
-Law and will be submitted to the exclusive jurisdiction of the
-English courts; 4) in Canada, the laws in the Province of
-Ontario govern this Agreement; and 5) in the United States and
-Puerto Rico, and People's Republic of China, the laws of the 
-State of New York govern this Agreement. 
-
-
-Part 2 - Country-unique Terms 
-
-
-AUSTRALIA: 
-
-No Warranty (Section 4): 
-The following paragraph is added to this Section: 
-
-Although Adaptec specifies that there are no warranties, you may
-have certain rights under the Trade Practices Act 1974 or other
-legislation and are only limited to the extent permitted by the
-applicable legislation. 
-
-Limitation of Liability (Section 3): 
-The following paragraph is added to this Section: 
-
-Where Adaptec is in breach of a condition or warranty implied by the
-Trade Practices Act 1974, Adaptec's liability is limited to the
-repair or replacement of the goods, or the supply of equivalent
-goods. Where that condition or warranty relates to right to
-sell, quiet possession or clear title, or the goods are of a
-kind ordinarily acquired for personal, domestic or household use
-or consumption, then none of the limitations in this paragraph
-apply. 
-
-
-GERMANY:
-
-No Warranty (Section 4):
-The following paragraphs are added to this Section:
-
-The minimum warranty period for Programs is six months.
-
-In case a Program is delivered without Specifications, we will
-only warrant that the Program information correctly describes
-the Program and that the Program can be used according to the
-Program information. You have to check the usability according
-to the Program information within the "money-back guaranty"
-period.
-
-Limitation of Liability (Section 5):
-The following paragraph is added to this Section:
-
-The limitations and exclusions specified in the Agreement will
-not apply to damages caused by Adaptec with fraud or gross
-negligence, and for express warranty. 
-
-
-INDIA: 
-
-General (Section 6): 
-The following replaces the fourth paragraph of this Section: 
-
-If no suit or other legal action is brought, within two years
-after the cause of action arose, in respect of any claim that
-either party may have against the other, the rights of the
-concerned party in respect of such claim will be forfeited and
-the other party will stand released from its obligations in
-respect of such claim. 
-
-
-IRELAND: 
-
-No Warranty (Section 4): 
-The following paragraph is added to this Section: 
-
-Except as expressly provided in these terms and conditions, all
-statutory conditions, including all warranties implied, but
-without prejudice to the generality of the foregoing, all
-warranties implied by the Sale of Goods Act 1893 or the Sale of
-Goods and Supply of Services Act 1980 are hereby excluded. 
-
-
-ITALY:
-
-Limitation of Liability (Section 5):
-This Section is replaced by the following:
-
-Unless otherwise provided by mandatory law, Adaptec is not liable
-for any damages which might arise. 
-
-
-NEW ZEALAND: 
-
-No Warranty (Section 4): 
-The following paragraph is added to this Section: 
-
-Although Adaptec specifies that there are no warranties, you may
-have certain rights under the Consumer Guarantees Act 1993 or
-other legislation which cannot be excluded or limited. The
-Consumer Guarantees Act 1993 will not apply in respect of any
-goods or services which Adaptec provides, if you require the goods
-and services for the purposes of a business as defined in that
-Act. 
-
-Limitation of Liability (Section 5): 
-The following paragraph is added to this Section: 
-
-Where Programs are not acquired for the purposes of a business
-as defined in the Consumer Guarantees Act 1993, the limitations
-in this Section are subject to the limitations in that Act. 
-
-
-PEOPLE'S REPUBLIC OF CHINA:
-
-Charges (Section 3):
-The following paragraph is added to the Section:
-
-All banking charges incurred in the People's Republic of China
-will be borne by you and those incurred outside the People's
-Republic of China will be borne by Adaptec. 
-
-
-UNITED KINGDOM: 
-
-Limitation of Liability (Section 5): 
-The following paragraph is added to this Section at the end of
-the first paragraph: 
-
-The limitation of liability will not apply to any breach of
-Adaptec's obligations implied by Section 12 of the Sales of Goods
-Act 1979 or Section 2 of the Supply of Goods and Services Act
-1982. 
-
-
-UNITED STATES AND CANADA:
-
-No Country-unique Terms apply.
-
-
-By continuing with the installation of the Program, you are 
-accepting the terms and conditions above.
-
+Software License Agreement
+PLEASE READ CAREFULLY: THE USE OF THIS SOFTWARE IS SUBJECT TO THE SOFTWARE LICENSE TERMS
+OF MICROSEMI CORPORATION, AND OTHER LICENSORS WHOSE SOFTWARE MAY BE BUNDLED WITH THIS PRODUCT.
+BY YOUR USE OF THE SOFTWARE INCLUDED WITH THIS PRODUCT YOU AGREE TO THE LICENSE TERMS
+REQUIRED BY THE LICENSOR OF THAT SOFTWARE, AS SET FORTH DURING THE INSTALLATION PROCESS.
+IF YOU DO NOT AGREE TO THE LICENSE TERMS APPLICABLE TO THE SOFTWARE, YOU MAY RETURN THE
+ENTIRE UNUSED PRODUCT FOR A FULL REFUND.
+In return for acquiring a license to use the Microsemi software, which may include software from third
+party licensors and patches made available by Microsemi (“Software”), and the related documentation,
+you agree to the following terms and conditions:
+1. License. This Agreement grants you, the Licensee, a license to:
+a. Use the Software on a single computer system, which is not intended for use by more than five
+(5) users; and:
+b. Make one copy of the Software in machine readable form solely for back-up purposes, provided
+you reproduce Microsemi's copyright proprietary legends. Notwithstanding the foregoing, the
+Software may be used on the home, laptop or other secondary computer of the principal user
+of the Software, and an additional copy of the Software may be made to support such use. As
+used in this license, the Software is “in use” when it is either loaded into RAM or installed on a
+hard disk or other permanent memory device. The Software may be “in use” on only one computer
+at any given time. (Different license terms and fees are applicable for networked or multiple user
+applications.) As a specific condition of this license, you agree to use the Software in compliance
+with all applicable laws, including copyright laws, and that you will not copy, transmit, perform
+or distribute any audio or other content using the Software without obtaining all necessary
+licenses or permissions from the owner of the content.
+2. Restrictions. You may not distribute copies of the Software to others or electronically transfer the
+Software from one computer to another over a network. You may not post or otherwise make
+available the Software, or any portion thereof, in any form, on the Internet. You may not use the
+Software in a computer service business, including in time sharing applications. The Software contains
+trade secrets and, in order to protect them, you may not decompile, reverse engineer, disassemble,
+or otherwise reduce the Software to a human-perceivable form. YOU MAY NOT MODIFY, ADAPT,
+TRANSLATE, RENT, LEASE, LOAN, RESELL FOR PROFIT, DISTRIBUTE, NETWORK OR CREATE DERIVATIVE
+WORKS BASED UPON THE SOFTWARE OR ANY PART THEREOF.
+3. Ownership of Software. As Licensee, you own the media upon which the software is recorded or
+fixed, but Microsemi and its licensors retain title and ownership of the Software recorded on the
+original media and all subsequent copies of the Software, regardless of the form or media in which
+or on which the original and other copies may exist. This license is not a sale of the Software or any
+copy.
+4. Confidentiality. You agree to maintain the Software in confidence and that you will not disclose the
+Software to any third party without the express written consent of Microsemi. You further agree
+to take all reasonable precautions to preclude access of unauthorized persons to the Software.
+5. Term. This license is effective until January 1, 2045, unless terminated earlier. You may terminate
+the license at any time by destroying the Software (including the related documentation) together
+with all copies or modifications in any form. Microsemi will have the right to terminate our license
+immediately if you fail to comply with any term or condition of this Agreement. Upon any termination,
+including termination by you, you must destroy the Software (including the related documentation),
+together with all copies or modifications in any form.
+6. Special Terms Applicable to Databases. Where a database is included with the Software, you
+acknowledge that it is licensed only in connection with the use of the Software to perform disc
+creation, and that the database and all data derived therefrom must be maintained in confidence
+in accordance with the provisions of Section 4. This license does not grant you any rights to distribute
+or disclose such database or data.
+7. Limited Warranty. Microsemi and its Licensor warrant only that the media upon which the Software
+is furnished will be free from defects in material or workmanship under normal use and service for
+a period of thirty (30) days from the date of delivery to you. MICROSEMI AND ITS LICENSORS DO
+NOT AND CANNOT WARRANT THE PERFORMANCE OR RESULTS YOU MAY OBTAIN BY USING THE
+SOFTWARE OR DOCUMENTATION. THE FOREGOING STATES THE SOLE AND EXCLUSIVE REMEDIES
+MICROSEMI AND ITS LICENSORS WILL PROVIDE FOR BREACH OF WARRANTY. EXCEPT FOR THE
+FOREGOING LIMITED WARRANTY, MICROSEMI AND ITS LICENSORS MAKE NO WARRANTIES,
+EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED, AS TO NON-INFRINGEMENT OF THIRD PARTY
+RIGHTS, MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. Some states do not allow the
+exclusion of implied warranties or limitations on how long an implied warranty may last, so the
+above limitations may not apply to you. This warranty gives you specific legal rights and you may
+also have other rights which vary from state to state.
+8. The entire liability of PMC-Sierra and its licensors, and your exclusive remedy for a breach of this
+warranty, shall be:
+a. The replacement of any media not meeting the above limited warranty which is returned to
+PMC-Sierra; or:
+b. if PMC-Sierra or its distributor is unable to deliver replacement media which is free from defects
+in materials or workmanship, you may terminate this Agreement by returning the Software and
+your money will be refunded.
+9. Limitation of Liability. IN NO EVENT WILL MICROSEMI OR ITS LICENSORS BE LIABLE TO YOU FOR ANY
+INCIDENTAL, CONSEQUENTIAL OR INDIRECT DAMAGES, INCLUDING ANY LOST PROFITS, LOST SAVINGS,
+OR LOSS OF DATA, EVEN IF MICROSEMI OR A LICENSOR HAS BEEN ADVISED OF THE POSSIBILITY OF
+SUCH DAMAGES, OR FOR ANY CLAIM BY ANY OTHER PARTY. Some states do not allow the exclusion
+or limitation of special, incidental, or consequential damages, so the above limitation or exclusion
+may not apply to you.
+10. Export. You acknowledge that the laws and regulations of the United States and other countries
+may restrict the export and re-export of the Software. You agree that you will not export or re-export
+the Software or documentation in any form in violation of applicable United States and foreign law.
+11. Government Restricted Rights. The Software is subject to restricted rights as follows. If the Software
+is acquired under the terms of a GSA contract: use, reproduction or disclosure is subject to the
+restrictions set forth in the applicable ADP Schedule contract. If the Software is acquired under the
+terms of a DoD or civilian agency contract, use, duplication or disclosure by the Government is subject
+to the restrictions of this Agreement in accordance with 48 C.F.R. 12.212 of the Federal Acquisition
+Regulations and its successors and 49 C.F.R. 227.7202-1 of the DoD FAR Supplement and its successors.
+12. General. You acknowledge that you have read this Agreement, understand it, and that by using the
+Software you agree to be bound by its terms and conditions. You further agree that it is the complete
+and exclusive statement of the agreement between PMC-Sierra and you, and supersedes any proposal
+or prior agreement, oral or written, and any other communication between PMC-Sierra and you
+relating to the subject matter of this Agreement. No additional or any different terms will be
+enforceable against PMC-Sierra unless PMC-Sierra gives its express consent, including an express
+waiver of the terms of this Agreement, in writing signed by an officer of PMC-Sierra. You assume
+full responsibility for the use of the Software and agree to use the Software legally and responsibly.
+This Agreement shall be governed by California law, except as to copyright matters, which are covered
+by Federal law. This Agreement is deemed entered into at Sunnyvale, California by both parties.
+Should any provision of this Agreement be declared unenforceable in any jurisdiction, then such
+provision shall be deemed severable from this Agreement and shall not affect the remainder hereof.
+All rights in the Software not specifically granted in this Agreement are reserved by PMC-Sierra.
+Should you have any questions concerning this license, contact:
+MICROSEMI Corporation.
+Legal Department
+1380 Bordeaux Drive
+Sunnyvale, CA 94089
+(408) 239-8000
+Proprietary
