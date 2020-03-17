@@ -18,7 +18,7 @@ Standart mode. Silently generate report and send it to API.
 FastvpsMonitoring.ps1 -Test
 Test mode. Similar to the Standart mode, but report will not send to API.
 .NOTES
-Version:        1.1
+Version:        1.2
 #>
 
 ######################################
@@ -39,16 +39,16 @@ Function Invoke-SendRequest
     Param(
         [Parameter(Mandatory=$True)][array]$RequestData,
         [String]$VerboseDateFormat = 'yyyy-MM-dd HH.mm:ss'
-   )
+    )
     Try
     {
         [string]$API = 'https://fastcheck24.com/api/server-state/storage'
         [string]$RequestMethod = 'POST'
         [string]$RequestContentType = 'application/json; charset=utf8'
 
-    	[hashtable]$RequestDataHash = @{
+        [hashtable]$RequestDataHash = @{
             'storage_devices' = $RequestData;
-            'version' = "1.1";
+            'version' = "1.2";
         }
 
         #Convert the report to json format
@@ -99,7 +99,7 @@ Function Get-PhysicalDiskSmartctlData
     Param(
         [Parameter(Mandatory=$True)][String]$Smartctl,
         [string]$VerboseDateFormat = 'yyyy-MM-dd HH.mm:ss'
-   )
+    )
     Try
     {
         #Get the physical disks available for smartctl.
@@ -110,17 +110,18 @@ Function Get-PhysicalDiskSmartctlData
             [string]$DriveName = $Drive.Split("{ }")[0]
             [string]$DriveType = $Drive.Split("{ }")[2]
 
-            If ($DriveType -NotMatch 'nvme')
+            If (($HwraidModel -eq 'adaptec') -and ($DriveName -eq '/dev/nvme0'))
             {
-                [string]$SmartEnable = & $Smartctl -i $DriveName | select-string "SMART.+Enabled$"
-                If (-not $SmartEnable) {
-                    Write-Warning -Message "The disk name is $($DriveName), the disk type is $($DriveType). This disk does not have SMART support. We do not check this disk"
-                    Continue
-                } Else {
-                    Write-Verbose -Message "The disk name is $($DriveName), the disk type is $($DriveType). This disk has support for SMART. Trying get SMART info"
-                }
+                Write-Verbose -Message "The drive name is $($DriveName) is not a real drive, but a '$($HwraidModel)' controller device. Skip it"
+                Continue
+            }
+            Write-Verbose -Message "The disk name is $($DriveName), the disk type is $($DriveType). Ignore check smart status"
+            [string]$SmartEnable = & $Smartctl -i $DriveName | select-string "SMART.+Enabled$"
+            If (-not $SmartEnable) {
+                Write-Warning -Message "The disk name is $($DriveName), the disk type is $($DriveType). This disk does not have SMART support. We do not check this disk"
+                Continue
             } Else {
-                Write-Verbose -Message "The disk name is $($DriveName), the disk type is $($DriveType). Ignore check smart status"
+                Write-Verbose -Message "The disk name is $($DriveName), the disk type is $($DriveType). This disk has support for SMART. Trying get SMART info"
             }
 
             [string[]]$SmartctlData = & $Smartctl -a $DriveName -d $DriveType
@@ -160,17 +161,22 @@ Function Get-SoftwareRaidData
 {
     Param(
         [String]$VerboseDateFormat = 'yyyy-MM-dd HH.mm:ss'
-   )
+    )
     Try
     {
-        [array]$SoftwareRaidData = Get-StoragePool;
+        $VDS=[Reflection.Assembly]::LoadWithPartialName("Microsoft.Storage.Vds")
+        $VDSServiceLoader = New-Object Microsoft.Storage.Vds.ServiceLoader
+        $VDSService = $VDSServiceLoader.LoadService($null)
+        $VDSService.WaitForServiceReady()
+        $SoftwareRaidData = $VDSService.Providers  | ForEach {$_.Packs} | ForEach {$_.Volumes}
+
         If ($SoftwareRaidData)
         {
             ForEach ($SoftRaid in $SoftwareRaidData) {
                 [string]$SoftwareRaidSize = [math]::Round(($SoftRaid.Size/1TB), 2).ToString() + "Tb" + "(" + ($SoftRaid.Size/1Gb).ToString() + "Gb)"
-                [string]$SoftwareRaidName = $SoftRaid.FriendlyName
-                [string]$SoftwareRaidStatus = $SoftRaid.HealthStatus
-                [string]$SoftwareRaidModel = $SoftRaid.ResiliencySettingNameDefault
+                [string]$SoftwareRaidName = $SoftRaid.label + "(" + $SoftRaid.DriveLetter + ")"
+                [string]$SoftwareRaidStatus = $SoftRaid.Health
+                [string]$SoftwareRaidModel = $SoftRaid.Type
                 [string]$SoftwareRaidData = $SoftRaid | Format-List * | out-string
 
                 Write-Verbose -Message "Software Raid Name:  $($SoftwareRaidName)"
@@ -207,7 +213,7 @@ Function Get-HardwareRaidDisksData
         [Parameter(Mandatory=$True)][array]$HwraidVirtualDevices,
         [Parameter(Mandatory=$True)][String]$Smartctl,
         [String]$VerboseDateFormat = 'yyyy-MM-dd HH.mm:ss'
-   )
+    )
     Try
     {
         #Get utility name. Available values 'MegaCli.exe' or 'arcconf.exe'
@@ -254,18 +260,18 @@ Function Get-HardwareRaidDisksData
 
                     #Get available SMART data by smartctl.
                     [string[]]$PhysicalDriveSmartctlData = & $Smartctl -a -d "aacraid,$PhysicalDrivePath" /dev/sda
-                    #Get the SMART attributes for the specIfied drive from xml.
-                    [string[]]$PhysicalDriveArcconfData = ($XML.SelectNodes("/SmartStats/PhysicalDriveSmartStats") | where {$_.id -eq $PhysicalDriveDeviceId}).Attribute.OuterXml
 
-                    If ($PhysicalDriveSmartctlData -match 'ARCIOCTL_SEND_RAW_SRB failed')
+                    #Get the SMART attributes for the specIfied drive from xml.
+                    [string[]]$PhysicalDriveArcconfData = & $CLI getconfig 1 pd $PhysicalDriveConnectorId $PhysicalDriveDeviceId
+                    [string]$PhysicalDriveData = $PhysicalDriveArcconfData | Out-String
+
+                    If ($PhysicalDriveSmartctlData -notmatch 'ARCIOCTL_SEND_RAW_SRB failed')
                     {
-                        Write-Warning -Message "Can't get SMART information about drive by smartctl. Adaptec bug. Skip it"
-                        [string]$PhysicalDriveData = $PhysicalDriveArcconfData | Out-String
+                        [string]$PhysicalDriveData += $PhysicalDriveSmartctlData | Out-String
                     }
                     Else
                     {
-                        #Combine the data, received from arcconf and smartctl.
-                        [string]$PhysicalDriveData = ($PhysicalDriveSmartctlData + $PhysicalDriveArcconfData) | Out-String
+                        Write-Warning -Message "Can't get SMART information about drive by smartctl. Adaptec bug. Skip it"
                     }
 
                     [string]$PhysicalDriveName = "Device #$PhysicalDriveDeviceId"
@@ -292,33 +298,33 @@ Function Get-HardwareRaidDisksData
         }
         ElseIf ($CLIName -eq 'MegaCli.exe')
         {
-           [int]$PhysicalDriveDeviceId = & $CLI -EncInfo -aALL | Select-String "^\s+Device\sID\s+:\s(\d+)" -AllMatches | % {$_.Matches} | % {$_.groups[1].value}
-           [int[]]$PhysicalDriveSlot = & $CLI -PDList -aALL | Select-String "\s*Slot\sNumber:\s(\d+)" -AllMatches | % {$_.Matches} | % {$_.groups[1].value}
+            [int]$PhysicalDriveDeviceId = & $CLI -EncInfo -aALL | Select-String "^\s+Device\sID\s+:\s(\d+)" -AllMatches | % {$_.Matches} | % {$_.groups[1].value}
+            [int[]]$PhysicalDriveSlot = & $CLI -PDList -aALL | Select-String "\s*Slot\sNumber:\s(\d+)" -AllMatches | % {$_.Matches} | % {$_.groups[1].value}
 
-           ForEach ($Slot in $PhysicalDriveSlot) {
-               [string]$PhysicalDrivePath = "$PhysicalDriveDeviceId`:$Slot"
-               [string[]]$PhysicalDriveData = & $CLI -pdInfo -PhysDrv [$PhysicalDrivePath] -aALL
+            ForEach ($Slot in $PhysicalDriveSlot) {
+                [string]$PhysicalDrivePath = "$PhysicalDriveDeviceId`:$Slot"
+                [string[]]$PhysicalDriveData = & $CLI -pdInfo -PhysDrv [$PhysicalDrivePath] -aALL
 
-               [string]$PhysicalDriveName = $PhysicalDriveData | Select-String "^\s*Device Id:\s(.*)$" -AllMatches
-               [string]$PhysicalDriveSize = $PhysicalDriveData | Select-String "^\s*Raw Size:\s(.*)$" -AllMatches | % {$_.Matches} | % {$_.groups[1].value}
-               [string]$PhysicalDriveModel = $PhysicalDriveData | Select-String "^\s*Inquiry Data:\s(.*)$" -AllMatches | % {$_.Matches} | % {$_.groups[1].value}
-               [string]$PhysicalDriveFormatData = $PhysicalDriveData | Out-String
+                [string]$PhysicalDriveName = $PhysicalDriveData | Select-String "^\s*Device Id:\s(.*)$" -AllMatches
+                [string]$PhysicalDriveSize = $PhysicalDriveData | Select-String "^\s*Raw Size:\s(.*)$" -AllMatches | % {$_.Matches} | % {$_.groups[1].value}
+                [string]$PhysicalDriveModel = $PhysicalDriveData | Select-String "^\s*Inquiry Data:\s(.*)$" -AllMatches | % {$_.Matches} | % {$_.groups[1].value}
+                [string]$PhysicalDriveFormatData = $PhysicalDriveData | Out-String
 
-               Write-Verbose -Message "Physical Drive Name:  $($PhysicalDriveName)"
-               Write-Verbose -Message "Physical Drive Size:  $($PhysicalDriveSize)"
-               Write-Verbose -Message "Physical Drive Model:  $($PhysicalDriveModel)"
-               Write-Verbose -Message "Physical Drive Data:  $($PhysicalDriveFormatData)"
+                Write-Verbose -Message "Physical Drive Name:  $($PhysicalDriveName)"
+                Write-Verbose -Message "Physical Drive Size:  $($PhysicalDriveSize)"
+                Write-Verbose -Message "Physical Drive Model:  $($PhysicalDriveModel)"
+                Write-Verbose -Message "Physical Drive Data:  $($PhysicalDriveFormatData)"
 
-               [hashtable]$PhysicalDrivesHash = @{
-                   'size' = $PhysicalDriveSize;
-                   'device_name' = $PhysicalDriveName;
-                   'status' = "undefined";
-                   'type' = "hard_disk";
-                   'diag' = $PhysicalDriveFormatData;
-                   'model' = $PhysicalDriveModel;
-               }
-               [array]$PhysicalDrivesArray += $PhysicalDrivesHash
-           }
+                [hashtable]$PhysicalDrivesHash = @{
+                    'size' = $PhysicalDriveSize;
+                    'device_name' = $PhysicalDriveName;
+                    'status' = "undefined";
+                    'type' = "hard_disk";
+                    'diag' = $PhysicalDriveFormatData;
+                    'model' = $PhysicalDriveModel;
+                }
+                [array]$PhysicalDrivesArray += $PhysicalDrivesHash
+            }
         }
         return $PhysicalDrivesArray
     }
@@ -335,7 +341,7 @@ Function Get-HardwareRaidVirtDeviceData
         [Parameter(Mandatory=$True)][String]$RaidModel,
         [Parameter(Mandatory=$True)][String]$CLI,
         [string]$VerboseDateFormat = 'yyyy-MM-dd HH.mm:ss'
-   )
+    )
     Try
     {
         #Get utility name. Available values 'MegaCli.exe' or 'arcconf.exe'
@@ -516,7 +522,7 @@ Else
             Write-Verbose -Message "`t`tName: $($device.device_name | Out-String)"
             Write-Verbose -Message "`t`tStatus: $($device.status | Out-String)"
             Write-Verbose -Message "`t`tSize: $($device.size | Out-String)"
-        	Write-Verbose -Message "`t`tType: $($device.type | Out-String)"
+            Write-Verbose -Message "`t`tType: $($device.type | Out-String)"
         }
         Write-Verbose -Message "`n"
     }
@@ -526,7 +532,7 @@ Else
         Write-Verbose -Message "Information about physical drives:"
         ForEach ($device in $PhysicalDisks) {
             Write-Verbose -Message "`t`tName: $($device.device_name | Out-String)"
-        	Write-Verbose -Message "`t`tType: $($device.type | Out-String)"
+            Write-Verbose -Message "`t`tType: $($device.type | Out-String)"
             Write-Verbose -Message "`t`tSize: $($device.size | Out-String)"
             Write-Verbose -Message "`t`tModel: $($device.model | Out-String)"
         }
