@@ -8,11 +8,11 @@ storage-system-monitoring-for-windows
 В данном репозитории размещен открытый код используемой нами системы диагностики дисковой подсистемы Ваших серверов. 
 
 Как установить скрипт мониторинга?
-- Скачиваем установщик https://github.com/FastVPSEestiOu/storage-system-monitoring-for-windows/raw/master/installer/fastvps_monitoring_install.exe
+- Скачиваем установщик https://github.com/FastVPSEestiOu/storage-system-monitoring-for-windows/releases/latest/download/fastvps_monitoring_install.exe 
 - Запускаем его и следуем инструкциям по установке.
 - Скачивание и запуск установщика можно выполнить следующей PowerShell командой:
 ```powershell
-wget https://github.com/FastVPSEestiOu/storage-system-monitoring-for-windows/raw/master/installer/fastvps_monitoring_install.exe -OutFile C:\Users\Administrator\Downloads\fastvps_monitoring_install.exe; & C:\Users\Administrator\Downloads\fastvps_monitoring_install.exe
+wget https://github.com/FastVPSEestiOu/storage-system-monitoring-for-windows/releases/latest/download/fastvps_monitoring_install.exe  -OutFile C:\Users\Administrator\Downloads\fastvps_monitoring_install.exe; & C:\Users\Administrator\Downloads\fastvps_monitoring_install.exe
 ```
 
 Где посмотреть мануал по использованию скрипта?
