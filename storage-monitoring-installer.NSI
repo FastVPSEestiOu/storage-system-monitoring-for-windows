@@ -18,7 +18,7 @@ InstallDir "C:\${COMPANYNAME}\${APPNAME}"
  
 # This will be in the installer/uninstaller's title bar
 Name "${COMPANYNAME} - ${APPNAME}"
-outFile "installer/fastvps_monitoring_install.exe"
+outFile "fastvps_monitoring_install.exe"
  
 !include LogicLib.nsh
  
@@ -60,7 +60,7 @@ section "install"
     file "FastvpsMonitoring.ps1"
 
     # Add task to schedule.
-    ExecWait 'schtasks /CREATE /SC HOURLY /TN "FastVPS Monitoring" /TR "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -ExecutionPolicy RemoteSigned -File $INSTDIR\FastvpsMonitoring.ps1" /RU "NT Authority\System"'
+    ExecWait 'schtasks /CREATE /F /SC HOURLY /TN "FastVPS Monitoring" /TR "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -ExecutionPolicy RemoteSigned -File $INSTDIR\FastvpsMonitoring.ps1" /RU "NT Authority\System"'
     ExecWait 'schtasks /RUN /TN "FastVPS Monitoring"'
     
     # Uninstaller file path.

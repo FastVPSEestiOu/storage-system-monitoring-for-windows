@@ -18,7 +18,7 @@ Standart mode. Silently generate report and send it to API.
 FastvpsMonitoring.ps1 -Test
 Test mode. Similar to the Standart mode, but report will not send to API.
 .NOTES
-Version:        1.2
+Version:        1.3
 #>
 
 ######################################
@@ -48,7 +48,7 @@ Function Invoke-SendRequest
 
         [hashtable]$RequestDataHash = @{
             'storage_devices' = $RequestData;
-            'version' = "1.2";
+            'version' = "1.3";
         }
 
         #Convert the report to json format
@@ -110,18 +110,24 @@ Function Get-PhysicalDiskSmartctlData
             [string]$DriveName = $Drive.Split("{ }")[0]
             [string]$DriveType = $Drive.Split("{ }")[2]
 
-            If (($HwraidModel -eq 'adaptec') -and ($DriveName -eq '/dev/nvme0'))
+            Write-Verbose -Message "$($DriveName) disk detected"
+
+            If ($DriveType -Match 'nvme')
             {
-                Write-Verbose -Message "The drive name is $($DriveName) is not a real drive, but a '$($HwraidModel)' controller device. Skip it"
-                Continue
-            }
-            Write-Verbose -Message "The disk name is $($DriveName), the disk type is $($DriveType). Ignore check smart status"
-            [string]$SmartEnable = & $Smartctl -i $DriveName | select-string "SMART.+Enabled$"
-            If (-not $SmartEnable) {
-                Write-Warning -Message "The disk name is $($DriveName), the disk type is $($DriveType). This disk does not have SMART support. We do not check this disk"
-                Continue
+                If (($HwraidModel -EQ 'adaptec') -And ($DriveName -EQ '/dev/nvme0'))
+                {
+                    Write-Verbose -Message "It is not a real drive, but a '$($HwraidModel)' controller device. Skip it"
+                    Continue
+                }
+                Write-Verbose -Message "The disk type is $($DriveType). Ignore check smart status"
             } Else {
-                Write-Verbose -Message "The disk name is $($DriveName), the disk type is $($DriveType). This disk has support for SMART. Trying get SMART info"
+                [string]$SmartEnable = & $Smartctl -i $DriveName | select-string "SMART.+Enabled$"
+                If (-not $SmartEnable) {
+                    Write-Warning -Message "$The disk type is $($DriveType). This disk does not have SMART support. We do not check this disk"
+                    Continue
+                } Else {
+                    Write-Verbose -Message "The disk type is $($DriveType). This disk has support for SMART, trying get SMART info"
+                }
             }
 
             [string[]]$SmartctlData = & $Smartctl -a $DriveName -d $DriveType
@@ -173,8 +179,19 @@ Function Get-SoftwareRaidData
         If ($SoftwareRaidData)
         {
             ForEach ($SoftRaid in $SoftwareRaidData) {
-                [string]$SoftwareRaidSize = [math]::Round(($SoftRaid.Size/1TB), 2).ToString() + "Tb" + "(" + ($SoftRaid.Size/1Gb).ToString() + "Gb)"
-                [string]$SoftwareRaidName = $SoftRaid.label + "(" + $SoftRaid.DriveLetter + ")"
+                [string]$SoftwareRaidName = $SoftRaid.label
+                If ($SoftRaid.AccessPaths)
+                {
+                    [string]$SoftwareRaidName += "(" + $SoftRaid.AccessPaths + ")"
+                }
+                If ($SoftRaid.Size -LE '1099511627776')
+                {
+                    [string]$SoftwareRaidSize = [math]::Round(($SoftRaid.Size/1Gb), 2).ToString() + "Gb"
+                }
+                Else {
+                    [string]$SoftwareRaidSize = [math]::Round(($SoftRaid.Size/1TB), 2).ToString() + "Tb"
+                }
+
                 [string]$SoftwareRaidStatus = $SoftRaid.Health
                 [string]$SoftwareRaidModel = $SoftRaid.Type
                 [string]$SoftwareRaidData = $SoftRaid | Format-List * | out-string
