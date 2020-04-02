@@ -18,7 +18,7 @@ Standart mode. Silently generate report and send it to API.
 FastvpsMonitoring.ps1 -Test
 Test mode. Similar to the Standart mode, but report will not send to API.
 .NOTES
-Version:        1.3
+Version:        1.4
 #>
 
 ######################################
@@ -48,7 +48,7 @@ Function Invoke-SendRequest
 
         [hashtable]$RequestDataHash = @{
             'storage_devices' = $RequestData;
-            'version' = "1.3";
+            'version' = '1.4';
         }
 
         #Convert the report to json format
@@ -174,7 +174,7 @@ Function Get-SoftwareRaidData
         $VDSServiceLoader = New-Object Microsoft.Storage.Vds.ServiceLoader
         $VDSService = $VDSServiceLoader.LoadService($null)
         $VDSService.WaitForServiceReady()
-        $SoftwareRaidData = $VDSService.Providers  | ForEach {$_.Packs} | ForEach {$_.Volumes}
+        $SoftwareRaidData = $VDSService.Providers.Packs | ForEach {$_.Volumes}
 
         If ($SoftwareRaidData)
         {
