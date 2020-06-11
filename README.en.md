@@ -9,12 +9,12 @@ You may find an open code of our disk subsystem diagnose system for your server.
 
 How to install the monitoring script?
 
-- Download the installer https://github.com/FastVPSEestiOu/storage-system-monitoring-for-windows/raw/master/installer/fastvps_monitoring_install.exe
+- Download the installer https://github.com/FastVPSEestiOu/storage-system-monitoring-for-windows/releases/latest/download/fastvps_monitoring_install.exe 
 - Run it and follow the installation instructions
 
 You may also download and run the installer by executing only one PowerShell command line:
 ```bash
-wget https://github.com/FastVPSEestiOu/storage-system-monitoring-for-windows/raw/master/installer/fastvps_monitoring_install.exe -OutFile C:\Users\Administrator\Downloads\fastvps_monitoring_install.exe; & C:\Users\Administrator\Downloads\fastvps_monitoring_install.exe
+wget https://github.com/FastVPSEestiOu/storage-system-monitoring-for-windows/releases/latest/download/fastvps_monitoring_install.exe  -OutFile C:\Users\Administrator\Downloads\fastvps_monitoring_install.exe; & C:\Users\Administrator\Downloads\fastvps_monitoring_install.exe
 ```
 
 Where can I see a manual on the use of a script?
