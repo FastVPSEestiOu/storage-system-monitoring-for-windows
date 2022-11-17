@@ -71,7 +71,7 @@ function Invoke-SendRequest {
         [string]$Name = 'storage-system-monitoring-for-windows'
         [string]$ScriptVersion = (Test-ScriptFileInfo -Path $PSCommandPath).Version
         
-        [string]$ServerIP = (Get-NetIPConfiguration | Where-Object {$_.IPv4DefaultGateway -ne $null -and $_.NetAdapter.status -ne "Disconnected"}).IPv4Address.IPAddress
+        [string]$ServerIP = (Resolve-DnsName -Name 'myip.opendns.com' -Server '208.67.222.220').IPAddress
         [string]$ServerOS = (Get-CimInstance -ClassName CIM_OperatingSystem).Caption.replace(" ",'_').tolower()
 
         [string]$RequestMethod = 'POST'
