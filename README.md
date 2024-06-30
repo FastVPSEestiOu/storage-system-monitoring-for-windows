@@ -1,103 +1,120 @@
 storage-system-monitoring-for-windows
 ==========================
 
-*Read this in: [Russian](README.md), [English](README.en.md).*
+Welcome, dear FastVPS Eesti OU customer! :) You've got here because we really care about you and your data safety!
 
-Добро пожаловать, уважаемый клиент компании FastVPS Eesti OU! :) Вы пришли сюда потому что мы очень заботимся о Вас и сохранности Ваших Данных!
+You may find an open code of our disk subsystem diagnose system for your server.
 
-В данном репозитории размещен открытый код используемой нами системы диагностики дисковой подсистемы Ваших серверов. 
+How to install the monitoring script?
 
-Как установить скрипт мониторинга?
-- Скачиваем установщик https://github.com/FastVPSEestiOu/storage-system-monitoring-for-windows/releases/latest/download/fastvps_monitoring_install.exe 
-- Запускаем его и следуем инструкциям по установке.
-- Скачивание и запуск установщика можно выполнить следующей PowerShell командой:
-```powershell
+- Download the installer https://github.com/FastVPSEestiOu/storage-system-monitoring-for-windows/releases/latest/download/fastvps_monitoring_install.exe 
+- Run it and follow the installation instructions
+
+You may also download and run the installer by executing only one PowerShell command line:
+```bash
 wget https://github.com/FastVPSEestiOu/storage-system-monitoring-for-windows/releases/latest/download/fastvps_monitoring_install.exe  -OutFile C:\Users\Administrator\Downloads\fastvps_monitoring_install.exe; & C:\Users\Administrator\Downloads\fastvps_monitoring_install.exe
 ```
 
-Где посмотреть мануал по использованию скрипта?
- -  Актуальную документацию для Вашей версии скрипта Вы можете получить при помощи стандартной утилиты powershell - Get-Help. Пример команды для запуска в powershell:
+Where can I see a manual on the use of a script?
+ - You can get up-to-date documentation for your version of the script using the standard powershell utility - Get-Help. An example command to run in powershell:
  ```powershell
 Get-Help C:\FASTVPS\StorageMonitoring\FastvpsMonitoring.ps1 -Full
 ```
 
-Насколько безопасен скрипт?
-- Скрипт работает по шифрованному каналу (https, ssl)
-- Скрипт не открывает портов на системе (что исключает вторжение извне)
-- Скрипт не обновляется автоматически (что исключение добавление уязвимостей)
-- Скрипт имеет полностью открытый код (что дает возможность ознакомиться с его содержимым)
+- The script works via an ecrypted channel (https, ssl)
+- The script doesn't open any ports in the system (which excludes a chance of intrusion from outside)
+- The script doesn't update itself automatically (which excludes adding vulnerabilities)
+- The script has an open code (which gives you a chance to read its content)
 
-За что отвечают отдельные файоы в данном репозитории?
-- FastvpsMonitoring.ps1 - сам скрипт, который собирается информацию по дискам и массивам.
-- storage-monitoring-installer.NSI - конфигурационный файл для утилиты NSIS, которой компилируется установщик.
-- installer/fastvps_monitoring_install.exe - уже скомплированный утилитой NSIS установщик.
-- utilities/arcconf - файлы утилиты arcconf, используемой для работы с контроллерами Adaptec.
-- utilities/megacli - файлы утилиты megacli, используемой для работы с контроллерами LSI.
-- utilities/smartmontools - файлы утилиты smartctl, используемой для получения данных с физических дисков.
 
-Куда отправляются все данные? 
-- Они отправляются по адресу https://fastcheck24.com по шифрованному соединению
+What files in this repo are responsible for?
 
-Что мы делаем с данными?
-- Мы их анализируем специализированным ПО использующим различные алгоритмы для предсказания возможного отказа дисковой подсистемы
-- В случае обнаружения деструктивных проблем на дисковой подсистеме мы свяжемся с Вами по всем доступным способам
+- FastvpsMonitoring.ps1 - the script itself that collects the data about disks and arrays.
+- storage-monitoring-installer.NSI - NSIS utility configuration file that compiles the installer.
+- installer/fastvps_monitoring_install.exe - compiled installer by NSIS utility.
+- utilities/arcconf - arcconf utility files that are used to work with Adaptec controllers.
+- utilities/megacli - megacli utility files that are used to work with LSI controllers.
+- utilities/smartmontools - smartctl utility files that are userd to get data from physical devices.
 
-Какие виды аппаратных RAID поддерживает мониторинг?
+Where does it send all data?
+
+- The data is send to https://fastcheck24.com via an ecrypted channel
+
+What do we do with the data?
+
+- We analyze it with a special software that uses various alogorythms to predict a disk subsystem failure
+- In the event of detecting a potentially destructive promlems with the disk subsystem we shall contact you in any available way
+
+Which types of RAID are being suppored by the monitoring?
+
 - Adaptec
 - LSI
 - DELL PERC (LSI)
 
-Что делает скрипт мониторинга?
-- Ежечасно отправляет информацию по VirtualDisk.
-- Ежечасно отправляет информацию по аппаратным RAID-ам и диском подключенным через них. 
-- Ежечасно отправяет выдачу smartctl по всем дискам в системе.
+What does the script do?
 
-Что скрипт НЕ делает?
-- Скрипт не запускает никаких сторонних модулей
-- Скрипт не обновляется в автоматическом режиме
-- Скрипт не отправляет никакой информации кроме того, что перечислено выше
+- Sends VritualDisk data hourly
+- Sends hardware RAID data and disks data connected to RAID hourly. 
+- Sends smartctl output regarding all disks in the system
 
-Какие ОС поддерживаются:
+What the scrip does NOT do?
+
+- The script does not run any additional modules
+- The script does not update itself automatically
+- The script does not send any information except what is listed above 
+
+Which operating systems are supported:
+
 - Windws Server 2012 r2
-- Корректность работы скрипта на других версиях ОС Windows не проверялась и поэтому не гарантируется.
+- Correct operation of the script was not tested on other OS Windows versions and can not be guaranteed.
 
-На каком языке написано ПО для мониторинга?
-- PowerShell 4.0 (скрипт мониторинга)
-- NSIS (установщик)
+Which program language the script was written in?
 
-Какие изменения в системе мы производим?
-- Мы создаем schedule task с именем "FastVPS Monitoring", которая выполняется каждый час.
-- Мы размещаем утилиты smartctl, arcconf, megacli, а также скрипт storage_system_fastvps_monitoring.pl в каталоге указанном при установке. По умолчанию это C:\FASTVPS\StorageMonitoring\ 
+- PowerShell 4.0 (monitoring script)
+- NSIS (installer)
 
-Кто может использовать данное ПО?
-- Любой клиент компании FastVPS Eesti OU
+What changes will be made in the system?
 
-Какое ПО мы устанавливаем на сервер и для чего?
-- smartmontools - пакет утилит для получения S.M.A.R.T. информации из устройства
-- arcconf/megacli - утилиты от производителей Adaptec и LSI
+- The script creates a schedule task with "FastVPS Monitoring" that runs every hour.
+- We place arcconf, megaraid and storage_system_fastvps_monitoring.pl script in a folder set during installation. It is C:\FASTVPS\StorageMonitoring\ by default.
 
-Могу ли я использовать программу только локально, вручную проверяя состояние массивов?
-- Да, разумеется, но при этом Вы лишаетсь возможностей нашей системы по анализу S.M.A.R.T. и прочих метрик, проверяется только состояние массива, также Вы не получаете никаких уведомлений в случае отказа дисков
+Who may use the software?
 
-Возможна ли поддержка XXX YYY?
-- Разумеется, патчи приветствуются!                                                                    
+- Any FastVPS Eesti OU customer
 
-Как посмотреть данные, которые собраны в процессе работы скрипта?
- - Для этого Вам необходимо запустить скрипт с ключом -Verbose. Все собранные данные будут выведены на экран.
-```powershell
+What kind of software do we install on the server and why?
+
+- smartmontools - a package of utilities for obtaining S.M.A.R.T. information from the device
+- arcconf - Adaptec vendor utilitiy
+- megacli - LSI vendor utilities
+
+May I use the program locally to check an array status?
+
+- Sure, but you loose all the features of our S.M.A.R.T. analyze system and other metrics. Only array condition can be checked. Moreover you will not get any notifications when a disk fails
+
+Is XXX YYY support available?
+
+- Of course, patches are welcome!
+
+Is it possible to see the data collected by the script?
+
+- In order to do that you need to run the script with -Verbose key. All the data collected will appear on the screen.
+```bash
 C:\FASTVPS\StorageMonitoring\FastvpsMonitoring.ps1 -Verbose
 ```
 
- - Если Вы хотите просто посмотреть всю полученную информацию, но не отправлять ее на сервер мониторинга, то необходимо в дополнение использовать ключ -Test:
+ - If you just want to view all the information received, but do not send it to the monitoring server, you must also use the -Test key:
  ```powershell
 C:\FASTVPS\StorageMonitoring\FastvpsMonitoring.ps1 -Verbose -Test
 ```
 
-Как самому скомпилировать установщик?
- - Скачиваем архив с файлами, которые будут включены в установщик - https://github.com/FastVPSEestiOu/storage-system-monitoring-for-windows/archive/master.zip
- - Скачиваем утилиту для компиляции установщика в exe формате - http://nsis.sourceforge.net/Download
- - Запускаем утилиту NSIS и в качестве конфигурационного файла указываем - storage-monitoring-installer.NSI
- - Дожидаемся окончания компиляции и проверяем работу установщика.
- 
-Как удалить скрипт мониторинга?
-- Достаточно запустить файл C:\FASTVPS\StorageMonitoring\uninstall.exe . Будут удалены все установленные программы, скрипт и задача из планировщика.
+Can I compile the script by myself?
+
+- Download the archive with files that are included into the installer - https://github.com/FastVPSEestiOu/storage-system-monitoring-for-windows/archive/master.zip
+- Download the utility to compile the installer in exe format - http://nsis.sourceforge.net/Download
+- Run NSIS utility. Choose storage-monitoring-installer.NSI as a configuration file.
+- Wait when compilation is complete and check the installer.
+
+How to remove the monitoring script from the system?
+
+- Simply run C:\FASTVPS\StorageMonitoring\uninstall.exe file. All programms related to the script and the scheduler task will be removed.
