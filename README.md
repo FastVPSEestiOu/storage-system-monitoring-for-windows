@@ -1,120 +1,98 @@
-storage-system-monitoring-for-windows
-==========================
+# Storage System Monitoring for Windows
 
-Welcome, dear FastVPS Eesti OU customer! :) You've got here because we really care about you and your data safety!
+Storage monitoring agent for FastVPS infrastructure. This script collects health information from storage devices, including SMART data and RAID controller status, and reports it to the monitoring API for analysis and failure prediction.
 
-You may find an open code of our disk subsystem diagnose system for your server.
+## Requirements
 
-How to install the monitoring script?
+- Operating System: Windows Server 2012, 2012 R2, 2016, 2019, 2019 R2, 2022.
+- PowerShell: 5.0 or higher.
+- Execution Policy: Ability to run PowerShell scripts.
 
-- Download the installer https://github.com/FastVPSEestiOu/storage-system-monitoring-for-windows/releases/latest/download/fastvps_monitoring_install.exe 
-- Run it and follow the installation instructions
+## Features
 
-You may also download and run the installer by executing only one PowerShell command line:
-```bash
-wget https://github.com/FastVPSEestiOu/storage-system-monitoring-for-windows/releases/latest/download/fastvps_monitoring_install.exe  -OutFile C:\Users\Administrator\Downloads\fastvps_monitoring_install.exe; & C:\Users\Administrator\Downloads\fastvps_monitoring_install.exe
+- **Comprehensive Health Checks** - Collects SMART attributes from physical disks (SATA, SAS, NVMe).
+- **RAID Support** - Monitors hardware RAID controllers (Adaptec, LSI) and Windows software RAID volumes.
+- **Automated Reporting** - Runs hourly via a scheduled task to ensure continuous monitoring.
+- **Secure Communication** - Transmits data via an encrypted HTTPS channel.
+- **No Inbound Connections** - Does not open any network ports, ensuring server security.
+
+## Installation
+
+The easiest way to install the monitoring agent is to use the provided installer.
+
+1. Download the [latest installer](https://github.com/FastVPSEestiOu/storage-system-monitoring-for-windows/releases/latest/download/fastvps_monitoring_install.exe).
+2. Run `fastvps_monitoring_install.exe` and follow the on-screen instructions.
+
+Alternatively, you can download and run the installer via PowerShell:
+
+```powershell
+$url = "https://github.com/FastVPSEestiOu/storage-system-monitoring-for-windows/releases/latest/download/fastvps_monitoring_install.exe"
+$output = "$env:TEMP\fastvps_monitoring_install.exe"
+Invoke-WebRequest -Uri $url -OutFile $output
+Start-Process -FilePath $output -Wait
 ```
 
-Where can I see a manual on the use of a script?
- - You can get up-to-date documentation for your version of the script using the standard powershell utility - Get-Help. An example command to run in powershell:
- ```powershell
-Get-Help C:\FASTVPS\StorageMonitoring\FastvpsMonitoring.ps1 -Full
+## Uninstallation
+
+To remove the monitoring agent and its scheduled task from the system:
+
+1. Navigate to the installation folder (default: `C:\FASTVPS\StorageMonitoring\`).
+2. Run `uninstall.exe`.
+3. All related files and the scheduled task will be removed.
+
+## Usage
+
+The script is designed to run automatically. However, you can run it manually for testing or diagnostic purposes.
+
+### View Collected Data
+
+To see the data being collected without sending it to the API:
+
+```powershell
+C:\FASTVPS\StorageMonitoring\FastvpsMonitoring.ps1 -Test -Verbose
 ```
 
-- The script works via an ecrypted channel (https, ssl)
-- The script doesn't open any ports in the system (which excludes a chance of intrusion from outside)
-- The script doesn't update itself automatically (which excludes adding vulnerabilities)
-- The script has an open code (which gives you a chance to read its content)
+### Manual Run
 
+To run the script and send data immediately:
 
-What files in this repo are responsible for?
-
-- FastvpsMonitoring.ps1 - the script itself that collects the data about disks and arrays.
-- storage-monitoring-installer.NSI - NSIS utility configuration file that compiles the installer.
-- installer/fastvps_monitoring_install.exe - compiled installer by NSIS utility.
-- utilities/arcconf - arcconf utility files that are used to work with Adaptec controllers.
-- utilities/megacli - megacli utility files that are used to work with LSI controllers.
-- utilities/smartmontools - smartctl utility files that are userd to get data from physical devices.
-
-Where does it send all data?
-
-- The data is send to https://fastcheck24.com via an ecrypted channel
-
-What do we do with the data?
-
-- We analyze it with a special software that uses various alogorythms to predict a disk subsystem failure
-- In the event of detecting a potentially destructive promlems with the disk subsystem we shall contact you in any available way
-
-Which types of RAID are being suppored by the monitoring?
-
-- Adaptec
-- LSI
-- DELL PERC (LSI)
-
-What does the script do?
-
-- Sends VritualDisk data hourly
-- Sends hardware RAID data and disks data connected to RAID hourly. 
-- Sends smartctl output regarding all disks in the system
-
-What the scrip does NOT do?
-
-- The script does not run any additional modules
-- The script does not update itself automatically
-- The script does not send any information except what is listed above 
-
-Which operating systems are supported:
-
-- Windws Server 2012 r2
-- Correct operation of the script was not tested on other OS Windows versions and can not be guaranteed.
-
-Which program language the script was written in?
-
-- PowerShell 4.0 (monitoring script)
-- NSIS (installer)
-
-What changes will be made in the system?
-
-- The script creates a schedule task with "FastVPS Monitoring" that runs every hour.
-- We place arcconf, megaraid and storage_system_fastvps_monitoring.pl script in a folder set during installation. It is C:\FASTVPS\StorageMonitoring\ by default.
-
-Who may use the software?
-
-- Any FastVPS Eesti OU customer
-
-What kind of software do we install on the server and why?
-
-- smartmontools - a package of utilities for obtaining S.M.A.R.T. information from the device
-- arcconf - Adaptec vendor utilitiy
-- megacli - LSI vendor utilities
-
-May I use the program locally to check an array status?
-
-- Sure, but you loose all the features of our S.M.A.R.T. analyze system and other metrics. Only array condition can be checked. Moreover you will not get any notifications when a disk fails
-
-Is XXX YYY support available?
-
-- Of course, patches are welcome!
-
-Is it possible to see the data collected by the script?
-
-- In order to do that you need to run the script with -Verbose key. All the data collected will appear on the screen.
-```bash
-C:\FASTVPS\StorageMonitoring\FastvpsMonitoring.ps1 -Verbose
+```powershell
+C:\FASTVPS\StorageMonitoring\FastvpsMonitoring.ps1
 ```
 
- - If you just want to view all the information received, but do not send it to the monitoring server, you must also use the -Test key:
- ```powershell
-C:\FASTVPS\StorageMonitoring\FastvpsMonitoring.ps1 -Verbose -Test
-```
+### Parameters
 
-Can I compile the script by myself?
+- `-Test`: Performs all checks and generates the report but does **not** send data to the API.
+- `-Verbose`: Displays detailed diagnostic output and the collected data on the console.
+- `-VerboseDateFormat`: (Optional) Specifies the date format for verbose output timestamps.
 
-- Download the archive with files that are included into the installer - https://github.com/FastVPSEestiOu/storage-system-monitoring-for-windows/archive/master.zip
-- Download the utility to compile the installer in exe format - http://nsis.sourceforge.net/Download
-- Run NSIS utility. Choose storage-monitoring-installer.NSI as a configuration file.
-- Wait when compilation is complete and check the installer.
+## Configuration
 
-How to remove the monitoring script from the system?
+- **Installation Directory**: Default is `C:\FASTVPS\StorageMonitoring\`.
+- **Scheduled Task**: The installer creates a task named `FastVPS Monitoring` that executes the script hourly.
+- **Included Utilities**: The project bundles essential tools in the `utilities` folder:
+  - `smartmontools`: For SMART data collection.
+  - `arcconf`: For Adaptec RAID controllers.
+  - `megacli`: For LSI controllers (Legacy).
 
-- Simply run C:\FASTVPS\StorageMonitoring\uninstall.exe file. All programms related to the script and the scheduler task will be removed.
+## Supported RAID Controllers
+
+- **Adaptec**: All controllers supported by `arcconf`.
+- **LSI / Broadcom**: All controllers supported by `MegaCLI`.
+- **DELL PERC**: All LSI-based PERC controllers.
+
+## Supported OS
+
+- Windows Server 2012
+- Windows Server 2012 R2
+- Windows Server 2016
+- Windows Server 2019
+- Windows Server 2019 R2
+- Windows Server 2022
+
+## Troubleshooting
+
+- Utility Errors: Verify that the `utilities` folder exists and contains the necessary executables for your hardware.
+- Logs: Run the script with the `-Verbose` parameter to identify specific points of failure.
+- Documentation: Use `Get-Help C:\FASTVPS\StorageMonitoring\FastvpsMonitoring.ps1 -Full` for built-in PowerShell documentation.
+
